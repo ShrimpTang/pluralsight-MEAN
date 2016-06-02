@@ -1,7 +1,10 @@
 var express = require('express'),
     stylus = require('stylus'),
     logger = require('morgan'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose');
+
+
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
@@ -33,3 +36,12 @@ app.get('*', function (req, res) {
 var port = 3030;
 app.listen(port)
 console.log('server running localhost:3030');
+
+mongoose.connect('mongodb://localhost/mean');
+var db = mongoose.connection;
+db.on('error', function () {
+    console.error('connection error...')
+});
+db.once('open',function () {
+    console.log('db connection')
+})
