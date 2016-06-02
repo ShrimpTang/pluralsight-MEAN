@@ -30,7 +30,9 @@ app.get('/partials/:partialPath', function (req, res) {
 
 
 app.get('*', function (req, res) {
-    res.render('index')
+    res.render('index',{
+        mongoMessage:mongoMessage
+    })
 })
 
 var port = 3030;
@@ -44,4 +46,12 @@ db.on('error', function () {
 });
 db.once('open',function () {
     console.log('db connection')
+});
+
+var mongoMessage;
+var Message = mongoose.model('Message',mongoose.Schema({message:String}));
+
+Message.findOne({}).exec(function (err,doc) {
+    console.log(doc)
+    mongoMessage = doc.message;
 })
