@@ -30,8 +30,8 @@ app.get('/partials/:partialPath', function (req, res) {
 
 
 app.get('*', function (req, res) {
-    res.render('index',{
-        mongoMessage:mongoMessage
+    res.render('index', {
+        mongoMessage: mongoMessage
     })
 })
 
@@ -39,19 +39,25 @@ var port = 3030;
 app.listen(port)
 console.log('server running localhost:3030');
 
-mongoose.connect('mongodb://localhost/mean');
+
+if (env == "development") {
+    mongoose.connect('mongodb://localhost/mean');
+} else {
+    mongoose.connect('mongodb://tang:tangzx711@ds015403.mlab.com:15403/mean');
+}
+
 var db = mongoose.connection;
 db.on('error', function () {
     console.error('connection error...')
 });
-db.once('open',function () {
+db.once('open', function () {
     console.log('db connection')
 });
 
 var mongoMessage;
-var Message = mongoose.model('Message',mongoose.Schema({message:String}));
+var Message = mongoose.model('Message', mongoose.Schema({message: String}));
 
-Message.findOne({}).exec(function (err,doc) {
+Message.findOne({}).exec(function (err, doc) {
     console.log(doc)
     mongoMessage = doc.message;
 })
