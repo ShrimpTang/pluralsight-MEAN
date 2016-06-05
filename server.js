@@ -16,7 +16,8 @@ function compile(str, path) {
 app.set('views', __dirname + '/server/views');
 app.set('view engine', 'jade');
 app.use(logger('dev'));
-app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(stylus.middleware({
     src: __dirname + '/public',
     compile: compile
@@ -35,8 +36,7 @@ app.get('*', function (req, res) {
     })
 })
 
-var port = 3030;
-app.listen(port)
+app.listen(3030)
 console.log('server running localhost:3030');
 
 
