@@ -8,8 +8,8 @@
     "pro": "NODE_ENV=pro nodemon server"
   },
   "engines": {
-    "node": "5.3.x",
-    "npm": "3.3.x"
+    "node": "5.3.0",
+    "npm": "3.3.12"
   },
   "author": "",
   "license": "ISC",
