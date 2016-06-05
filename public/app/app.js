@@ -6,10 +6,7 @@ angular.module('app', ['ngResource', 'ngRoute'])
         });
         $routeProvider
             .when('/', {
-                templateUrl: '/partials/main',
-                controller: 'mainCtrl'
+                templateUrl: '/partials/main/main',
+                controller: 'mvMainCtrl'
             })
-    })
-    .controller('mainCtrl', function ($scope) {
-        $scope.myVal = "Hello Angular"
     })

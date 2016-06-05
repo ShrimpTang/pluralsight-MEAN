@@ -1,7 +1,4 @@
 var express = require('express'),
-    stylus = require('stylus'),
-    logger = require('morgan'),
-    bodyParser = require('body-parser'),
     mongoose = require('mongoose');
 
 
@@ -9,42 +6,26 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 
-function compile(str, path) {
-    return stylus(str).set('filename', path);
-}
 
-app.set('views', __dirname + '/server/views');
-app.set('view engine', 'jade');
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(stylus.middleware({
-    src: __dirname + '/public',
-    compile: compile
-}));
-app.use(express.static(__dirname + '/public'));
+var config = require('./server/config/config')[env];
+
+require('./server/config/express')(app, config);
 
 
-app.get('/partials/:partialPath', function (req, res) {
-    res.render('partials/' + req.params.partialPath);
+app.get('/partials/*', function (req, res) {
+    res.render('../../public/app/' + req.params[0]);
 })
 
 
 app.get('*', function (req, res) {
-    res.render('index', {
-        mongoMessage: mongoMessage
-    })
+    res.render('index', {})
 })
 
-app.listen(process.env.PORT || 5000)
-console.log('server running localhost:3030');
+app.listen(config.port)
+console.log('server running localhost:' + config.port);
 
 
-if (env == "development") {
-    mongoose.connect('mongodb://localhost/mean');
-} else {
-    mongoose.connect('mongodb://tang:tangzx711@ds015403.mlab.com:15403/mean');
-}
+mongoose.connect(config.db);
 
 var db = mongoose.connection;
 db.on('error', function () {
@@ -54,10 +35,5 @@ db.once('open', function () {
     console.log('db connection')
 });
 
-var mongoMessage;
-var Message = mongoose.model('Message', mongoose.Schema({message: String}));
-
-Message.findOne({}).exec(function (err, doc) {
-    console.log(doc)
-    mongoMessage = doc.message;
-})
+//var mongoMessage;
+//var Message = mongoose.model('Message', mongoose.Schema({message: String}));
